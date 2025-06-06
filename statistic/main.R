@@ -7,7 +7,7 @@ if (!requireNamespace("languageserver", quietly = TRUE)) {
 } else {
   cat("✔ languageserver 套件已正確安裝 ✅\n")
 }
-ㄆ
+
 # 2. 顯示 R 版本與工作目錄
 cat("🔧 R 版本：", R.version.string, "\n")
 cat("📁 當前工作目錄：", getwd(), "\n\n")
