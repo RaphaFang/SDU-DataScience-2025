@@ -1,4 +1,4 @@
-package ds_and_alg;
+package ds_and_alg.adt;
 
 import java.util.Deque;
 import java.util.ArrayDeque;
@@ -41,6 +41,6 @@ public class UndoRedo {
         editor.type("B");
         System.out.println(editor.undo()); // Undo: B
         System.out.println(editor.redo()); // Redo: B
-        System.out.println(editor.printState()); // [B, A]
+        System.out.println(editor.printState()); // [A, B]
     }
 }

@@ -1,4 +1,4 @@
-package ds_and_alg;
+package ds_and_alg.adt;
 
 import java.util.Stack;
 import java.util.Deque;

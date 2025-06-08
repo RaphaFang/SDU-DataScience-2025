@@ -1,4 +1,4 @@
-package ds_and_alg;
+package ds_and_alg.adt;
 
 // -------------------------------------------------------
 // ! (1.4) Queue(舊方法) vs Deque, FIFO
