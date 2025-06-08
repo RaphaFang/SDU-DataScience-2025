@@ -74,7 +74,6 @@ print(cq.is_empty())    # True
 # ! (1.5) Priority Queue
 # -------------------------------------------------------
 import heapq
-
 class Task:
     def __init__(self, name, priority):
         self.name = name
@@ -83,7 +82,6 @@ class Task:
     def __lt__(self, other):
         return self.priority < other.priority  # 小的先出隊
         # return self.priority > other.priority  # 大的先出來（Max Heap）
-
 
     def __repr__(self):
         return f"{self.name}({self.priority})"
@@ -100,7 +98,6 @@ class TaskScheduler:
             return heapq.heappop(self.pq)
         return None
 
-# 測試
 scheduler = TaskScheduler()
 scheduler.add_task("Clean", 3)
 scheduler.add_task("Eat", 1)
@@ -112,3 +109,40 @@ print(scheduler.get_next_task())  # Study(2)
 # -------------------------------------------------------
 # ! (1.7) Deque（雙向佇列）+ Undo / Redo 模擬
 # -------------------------------------------------------
+# from collections import deque
+class TextEditor:
+    def __init__(self):
+        self.undo_stack = deque()
+        self.redo_stack = deque()
+
+    def type(self, text):
+        self.undo_stack.append(text)
+        # self.redo_stack.clear() # 新增就把存放的redo砍了？ 超怪
+
+    def undo(self):
+        if self.undo_stack:
+            action = self.undo_stack.pop()
+            self.redo_stack.appendleft(action)
+            return f"Undo: {action}"
+        return "Nothing to undo."
+
+    def redo(self):
+        if self.redo_stack:
+            action = self.redo_stack.popleft()
+            self.undo_stack.append(action)
+            return f"Redo: {action}"
+        return "Nothing to redo."
+
+    def current_state(self):
+        return list(self.undo_stack)
+
+editor = TextEditor()
+editor.type("A")
+editor.type("B")
+print(editor.undo())         # Undo: B
+print(editor.redo())         # Redo: B
+print(editor.current_state())  # ['A', 'B']
+# 這邊使用雙端的deque世因為即便LIFO的stack狀態，也可以做到 undo/ redo
+# 但是會沒辦法紀錄事件先後順序
+# 例如 A, B, C 加入，這時候我undo，
+# 我會希望暫存的redo_stack 按照順序存放由最早開始存放到最新
