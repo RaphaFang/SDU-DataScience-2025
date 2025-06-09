@@ -27,4 +27,4 @@ print(merge_sort([50, 2, 60, 4, 6, 7, 1, 3]))
 # 並且，如果左邊完全比右邊小，就會一直把左邊加完
 # 接著跳出while，再加上右邊全部
 
-# print("Recursion Iteration".lower().replace(" ", "_"))
+# print("Greedy Algorithm.".lower().replace(" ", "_"))
