@@ -1,4 +1,4 @@
-# two sum
+# !two sum
 nums = [3, 2, 4, 7, 5, 1]
 target = 9
 
@@ -20,7 +20,7 @@ def two_sum(nums, target):
 # two_sum(nums, target)
 
 # ------------------------------------------------------------------------
-# three sum
+# ! three sum
 nums = [-4, -1, -1, 0, 1, 2]
 target = 0
 def three_sum(nums, target):
@@ -39,5 +39,8 @@ def three_sum(nums, target):
                     left +=1
         return 0
 
-three_sum(nums, target)
+# three_sum(nums, target)
 
+# ------------------------------------------------------------------------
+# 如果是真的 brute force 就是nesting for-loop
+# 理個的合就是兩層，三個是三層
