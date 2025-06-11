@@ -54,8 +54,9 @@ def permute_iter(nums):
 # ------------------------------------------------------------------------
 from itertools import permutations
 
-for p in permutations([1, 2, 2, 3]):
-    print(p)
+per = permutations([1, 2, 2, 3])
+# print(list(per))
+
 # 這問題是他沒辦法排除重複
 # (1, 2, 2, 3) same
 # (1, 2, 3, 2)
@@ -63,3 +64,33 @@ for p in permutations([1, 2, 2, 3]):
 # (1, 2, 3, 2)
 # (1, 3, 2, 2) 
 # (1, 3, 2, 2)
+
+# ------------------------------------------------------------------------
+import pandas as pd
+df = pd.DataFrame({'col': [1, 2, 3]})
+perms = list(permutations(df['col']))
+# print(perms)
+
+
+# ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
+def combination(nums):
+    result = []
+
+    def backtrack(start, path):
+        result.append(path[:])  # 記錄目前子集（複製）
+        for i in range(start, len(nums)):
+            path.append(nums[i])
+            backtrack(i + 1, path)  # 往下遞迴，i+1 是為了避免重複
+            path.pop()
+
+    backtrack(0, [])
+    return result
+
+# print(combination([1, 2, 3]))
+
+# 這邏輯跟上面的permutation 是類似的，一樣疊 for loop ，接著一層一層到底 1,2,3 ，退掉
+# 在用上 range 到下一 index，接著接上 1,3
+
+# ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
