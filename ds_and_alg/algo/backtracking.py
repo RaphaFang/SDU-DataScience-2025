@@ -94,3 +94,41 @@ def combination(nums):
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
+def solve_n_queens(n):
+    result = []
+
+    def backtrack(row, cols, diag1, diag2, path):
+        if row == n:
+            # 將 path 轉為棋盤文字
+            board = []
+            for col in path:
+                row_str = "." * col + "Q" + "." * (n - col - 1)
+                board.append(row_str)
+            result.append(board)
+            return
+
+        for col in range(n):
+            if col in cols or (row - col) in diag1 or (row + col) in diag2:
+                continue  # 剪枝：欄位 or 斜線被占用
+
+            # 做選擇
+            cols.add(col)
+            diag1.add(row - col)  # 主對角線 ↘
+            diag2.add(row + col)  # 副對角線 ↙
+            path.append(col)
+
+            backtrack(row + 1, cols, diag1, diag2, path)
+
+            # 撤銷選擇
+            cols.remove(col)
+            diag1.remove(row - col)
+            diag2.remove(row + col)
+            path.pop()
+
+    backtrack(0, set(), set(), set(), [])
+    return result
+
+for board in solve_n_queens(4):
+    for row in board:
+        print(row)
+    print()
