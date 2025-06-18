@@ -23,5 +23,5 @@ TestResults.xml
 
 *.class
 *.csv
-*.png
+# *.png
 *.pdf
