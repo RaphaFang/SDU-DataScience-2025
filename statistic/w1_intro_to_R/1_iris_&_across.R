@@ -1,7 +1,25 @@
 # install.packages("dplyr")
 library(dplyr)
-
 head(iris)
+# -------------------------------------------------------
+# !注意。 我這邊學的都是tidyverse
+# 以欄位建立並且存入原數據：
+# Base R
+iris$Sepal.Length.z <- scale(iris$Sepal.Length)
+
+# tidyverse
+iris <- iris %>%
+    mutate(Sepal.Length.z <- scale(Sepal.Length))
+
+# -------------------------------------------------------
+# summarise：「縮成一筆」，對資料做總結
+# across：「橫跨多欄」，在多欄位上套用一樣的操作
+# tibble：這是畫出資料table
+
+# -------------------------------------------------------
+mu <- iris %>% summarise(m = mean(Sepal.Length)) %>% pull(m)
+# pull()
+# 把 df 拉出來，轉變成 vector，才能在後續傳入數值給其他計算使用
 
 # -------------------------------------------------------
 iris %>%
@@ -12,8 +30,7 @@ iris %>%
       .names = "mean_{.col}"
     )
   )
-
-
+# -------------------------------------------------------
 # -------------------------------------------------------
 # exercise
 # 1.1 

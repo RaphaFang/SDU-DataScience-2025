@@ -30,6 +30,10 @@ head(iris)
 # 累積的分布，圖最後會到1(100%)
 
 # -------------------------------------------------------
+# pull()
+# 把 df 拉出來，轉變成 vector，才能在後續傳入數值給其他計算使用
+
+# -------------------------------------------------------
 mu <- iris %>% summarise(m = mean(Sepal.Length)) %>% pull(m)
 s  <- iris %>% summarise(s = sd(Sepal.Length))   %>% pull(s)
 
@@ -82,7 +86,7 @@ dnorm(mean(iris$Petal.Length), mean(iris$Petal.Length), sd(iris$Petal.Length))
 
 # 3.6
 p <- ggplot(iris, aes(x = Petal.Length, fill = Species)) + 
-  geom_density(alpha = 0.5, size = 0.5) +
+  geom_density(alpha = 0.5, linewidth = 0.5) +
   labs(
     title = "Density Plot of Petal Length by Species",
     x = "Petal Length",
