@@ -23,7 +23,7 @@ def truth_table(expr, vars=('p','q')):
 # ---------------------------------------------------------------
 # ! 目標是找到 Tautology
 # ---------------------------------------------------------------
-# ! modus ponens (MP)
+# ! 1. modus ponens (MP)
 # (p→q) ∧ p ⇒ q
 # p -> q
 # p
@@ -35,7 +35,7 @@ rule = Implies(And(Implies(p, q), p), q)
 print(simplify_logic(rule))                   # → True
 
 # ---------------------------------------------------------------
-# ! Modus Tollens (MT)
+# ! 2. Modus Tollens (MT)
 # (p→q) ∧ ~q ⇒ ~p
 # p -> q
 # ~q
@@ -59,7 +59,7 @@ print(simplify_logic(expr))
 # mt_rule = Implies(, Not(Implies(p,q)))
 
 # ---------------------------------------------------------------
-# ! Hypothetical Syllogism (HS) — 假言三段論
+# ! 3. Hypothetical Syllogism (HS) — 假言三段論
 # (p→q)∧(q→r)⟹p→r
 
 p, q, r = symbols('p q r')
@@ -94,4 +94,32 @@ print('counter-example :', model)  # {r: True, p: True, q: False, s: False}
 # (p∧r)→s (結論是可以推出來)
 # 關鍵在於第二前提可以拆解成 q>s, r>s ？
 # 接著依據HS, p>q, q>s 可得到p>s，p>s,  r>s 二者可以合併（這邊是不是也要一個rule?），就能QED
+
 # ---------------------------------------------------------------
+# ! 4. Disjunctive Syllogism (DS) — 選言三段論
+# (p∨q)∧¬p⟹q　（對稱式也成立：(p∨q)∧¬q⟹p）
+# A or B 為真, 其中一者為假，則另一個為真 
+
+# ---------------------------------------------------------------
+# ! 5. Constructive Dilemma (CD) — 建構兩難
+# (p→q)∧(r→s)∧(p∨r)⟹q∨s
+    # 與 Disjunctive Syllogism 相反：CD 是 從前因推出後果的「正向」二選一
+# 要基於 MP ，p∨r 任何一個為T，這時候 q∨s 必然為真
+
+# (p→q)→r, (s→t)→u, (p→q)∨(s→t)
+# r∨u
+
+# ---------------------------------------------------------------
+# ! 6. Simplification (Simp) — 簡化
+# p∧q⟹p （亦可推出 q）
+# 兩者的連集為真，挑隨便一個都為真
+
+# ---------------------------------------------------------------
+# ! 7. Conjunction (Conj) — 合取
+# p,q⟹p∧q
+# 兩者都是真，兩者的連集為真
+
+# ---------------------------------------------------------------
+# ! 8. Addition (Add) — 加法
+# p⟹q∨p
+# 一者為真，加上 or 也為真
