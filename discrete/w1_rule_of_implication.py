@@ -94,6 +94,7 @@ print('counter-example :', model)  # {r: True, p: True, q: False, s: False}
 # (p∧r)→s (結論是可以推出來)
 # 關鍵在於第二前提可以拆解成 q>s, r>s ？
 # 接著依據HS, p>q, q>s 可得到p>s，p>s,  r>s 二者可以合併（這邊是不是也要一個rule?），就能QED
+# ! 正確的作法：正著作，會包含拆解，以及 or 的追加元件概念。或者是反正明
 
 # ---------------------------------------------------------------
 # ! 4. Disjunctive Syllogism (DS) — 選言三段論
