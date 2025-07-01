@@ -85,23 +85,35 @@
     # ∃o ∀u (¬Premium(u) → Owner(u,o))
 
 # ---------------------------------------------------------------
-# F1	¬∃o ∀u (Paid(o) → Owner(u,o))	推否定進原子並改全稱：∀o ∃u (Paid(o) ∧ ¬Owner(u,o))。試親手推導。
+# F1	¬∃o ∀u (Paid(o) → Owner(u,o))	推否定進原子並改全稱：∀o ∃u (Paid(o) ∧ ¬Owner(u,o))
+    # ∀o ∃u (Paid(o) ∧ ¬Owner(u,o)) # ! 這邊要變成 ∀o ∃u
+
 # F2	∀u ∃o (Owner(u,o) ∧ Urgent(o))	將量詞交換為 ∃o ∀u … 是否等價？如否，給反例（列兩人一單）。
+    # 所有用戶存在一個訂單並且是緊急的
+    # ∃o ∀u (Owner(u,o) ∧ Urgent(o)) 存在一用戶擁有所有訂單並且訂單是緊急的
+    # 兩者不等價。轉換成自然語言就不相同
+
 # F3	∀o ((Paid(o) ∨ Cancel(o)) ∧ ¬(Paid(o) ∧ Cancel(o)))	寫成沒有 ∨、¬ 在外層的 Prenex CNF。
+    # ∀o [ (Paid(o) ∨ Cancel(o)) ∧ (¬Paid(o) ∨ ¬Cancel(o)) ]
+
 # F4	∃u (Has2FA(u) ↔ Premium(u))	先拆 ↔，再用 Imp → ∨、DM，把否定推到底並拉量詞到最外。
+    # ∃u ((~H(u) v P(u)) ∧ (~P(u) v H(u)))
 
 # ---------------------------------------------------------------
-# Part G 有效／無效判定 + 最小反例（3 題）
-# 前提
-# ① ∀o (Ship(o) → Paid(o)) ② ∃o Cancel(o)
+# G1 前提  # ① ∀o (Ship(o) → Paid(o)) ② ∃o Cancel(o)
 # 結論：∃o Paid(o)
 # ↑ 有效或無效？若無效，給出只含 1 筆訂單的反例。
+    # 無效，給的第二條件完全不相關，沒辦法幫助得到結論
 
-# 前提
-# ① ∃u ∀o (Owner(u,o) → Ship(o)) ② ∃o ¬Ship(o)
+# G2 前提  # ① ∃u ∀o (Owner(u,o) → Ship(o)) ② ∃o ¬Ship(o)
 # 結論：∃u ¬Owner(u,o)
 # （注意 u, o 自由與綁定範圍）
+    # 這邊的前提是，存在一個用戶他的所有訂單都寄送了，以及，存在一個訂單沒有寄送
+    # 想推論得到，存在一用戶不是該訂單的所有人
+    # ! 至少會有一個人，不可能是該訂單所有人（因為有一個用戶只要有訂單都送了）  經典的 MT
 
-# 前提
-# ① ∀u (Premium(u) → Has2FA(u)) ② ∃u ¬Premium(u)
+# G3 前提 # ① ∀u (Premium(u) → Has2FA(u)) ② ∃u ¬Premium(u)
 # 結論：∃u ¬Has2FA(u)
+    # 所有用戶如果有P則他有通過認證
+    # 存在用戶非P
+    # ! 不能推論，無法基於 MT 是基於為假的後建，非前建
