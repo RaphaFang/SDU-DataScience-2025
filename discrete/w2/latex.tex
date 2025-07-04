@@ -1,0 +1,69 @@
+% cmd + opt + v
+
+\documentclass[12pt]{article}
+
+% 推薦載入的常用套件
+\usepackage{amsmath, amssymb, amsthm}  % 數學環境
+\usepackage{enumitem}                  % 自訂 enumerate 格式
+
+% theorem / proof 環境宣告
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+
+\begin{document}
+
+\begin{theorem}
+Let $\texttt{num}\in\mathbb{Z}_{>0}$.  
+The function \texttt{isPerfectSquare(num)} (binary-search version) returns
+{\bf true} if and only if $\texttt{num}$ is a perfect square.
+\end{theorem}
+
+\begin{proof}[Proof by invariant and contradiction]
+%
+\paragraph{Invariant.}
+At the start of every loop iteration, if there exists an integer
+$r$ such that $r^2=\texttt{num}$, then $r\in[\texttt{low},\,\texttt{high}]$.
+
+\paragraph{Initialization.}~
+Initially $\texttt{low}=1,\,\texttt{high}=\texttt{num}$, so the interval
+contains \emph{all} positive integers; the invariant holds vacuously.
+
+\paragraph{Maintenance.}~
+Let $\texttt{mid}=\bigl\lfloor(\texttt{low}+\texttt{high})/2\bigr\rfloor$.
+
+\begin{enumerate}[label=\textbf{Case \arabic*:}, wide=0pt]
+  \item $\texttt{mid}^2<\texttt{num}$.  
+        Assume for contradiction that the real root $r\le\texttt{mid}$.  
+        Then $r^2\le\texttt{mid}^2<\texttt{num}$, contradicting $r^2=\texttt{num}$.  
+        Hence $r>\texttt{mid}$ and still lies in
+        $[\texttt{mid}+1,\texttt{high}]$ after we set
+        $\texttt{low}=\texttt{mid}+1$.
+  \item $\texttt{mid}^2>\texttt{num}$.  
+        The symmetric argument shows $r<\texttt{mid}$, therefore
+        $r\in[\texttt{low},\texttt{mid}-1]$ after we update
+        $\texttt{high}=\texttt{mid}-1$.
+\end{enumerate}
+In each case the invariant is preserved.
+
+\paragraph{Termination.}
+The loop stops in two possible situations:
+\begin{itemize}
+  \item $\texttt{mid}^2=\texttt{num}$ --- we return \textbf{true}, and $r=\texttt{mid}$.
+  \item $\texttt{low}>\texttt{high}$ --- suppose, for contradiction, that an
+        integer root $r$ exists.  Then $r\notin[\texttt{low},\texttt{high}]$,
+        violating the invariant.  Hence no such $r$ exists and the function
+        correctly returns \textbf{false}.
+\end{itemize}
+\end{proof}
+
+\end{document}
+
+% \documentclass{article}
+% \begin{document}
+% Hello, \LaTeX!
+
+% Here is an equation:
+% \[
+%   E = mc^2
+% \]
+% \end{document}
