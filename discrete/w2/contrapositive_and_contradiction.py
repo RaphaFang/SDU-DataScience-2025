@@ -3,7 +3,8 @@
 # | 直接證   | 前件 *p*  | …       | 得到 *q*    | p→q 且 p 不難用         |
 # | 逆否證   | ¬q       | …        | 得到 ¬p    | p→q，q 較難證真，¬q 容易拿   |
 # | 反證     | ¬命題     | … → ⟂   | 得到命題真  | “不存在…”、“√2 無理”等否定敘述 |
-
+# ---------------------------------------------------------------
+# ! 接下來 pytest 都不要用try except ，而是用 assert
 # ---------------------------------------------------------------
 # B.1 逆否證
 # 命題：若 n² 為偶數，則 n 為偶數。
@@ -20,8 +21,9 @@
     # 我的反正證明了前提為真，證明成功
 
 # ---------------------------------------------------------------
-# if __name__ == "__main__":
 import pytest
+import math
+# pytest discrete/w2/contrapositive_and_contradiction.py
 
 # B.2
 # 逆否證 – 不等式
@@ -32,6 +34,25 @@ def test_b1(x):
         assert x <= 2
            # 逆否命題成立
 
+# 反證 – 質數
+# 證：√5 是無理數。
+# key point; 如果不是有理數，跟號的數會是一串小數，再將這小數 square變不回原先數
+@pytest.mark.parametrize('y', [5,6,7,8,9,10])
+def test_b2(y):
+    temp = (y**0.5)
+    assert temp*temp == pytest.approx(y), '並非有理數'
+    # ! pytest.approx() 不能在誇號內部運算，只能拿來比較
 
-# pytest discrete/w2/contrapositive_and_contradiction.py
+# 函式 square_root(n) 的契約：Pre n ≥ 0；Post (square_root(n))² = n。
+# 編寫一條單元測試，利用逆否思路驗證「若輸出平方 ≠ n，則必是 n<0」。
+        
+@pytest.mark.parametrize('z', [1,4,9,-1,-2])
+def test_b3(z):
+    def square_root(n):
+        assert n >= 0, "Precondition failed: n must be non-negative"
+        return math.sqrt(n)
 
+    r = square_root(z)
+    assert r*r == pytest.approx(z), 'Statement Fails.'
+
+# ---------------------------------------------------------------
