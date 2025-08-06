@@ -1,8 +1,10 @@
 % cmd + opt + v
+% 不確定報錯因素，但是又能夠透過 short cut 得到 pdf
+% ------------------------------------------------------------------------
 
 \documentclass[12pt]{article}
 
-% 推薦載入的常用套件
+\usepackage[T1]{fontenc}  % 字型編碼：避免非 ASCII 字元錯誤
 \usepackage{amsmath, amssymb, amsthm}  % 數學環境
 \usepackage{enumitem}                  % 自訂 enumerate 格式
 
@@ -15,20 +17,20 @@
 \begin{theorem}
 Let $\texttt{num}\in\mathbb{Z}_{>0}$.  
 The function \texttt{isPerfectSquare(num)} (binary-search version) returns
-{\bf true} if and only if $\texttt{num}$ is a perfect square.
+\textbf{true} if and only if $\texttt{num}$ is a perfect square.
 \end{theorem}
 
 \begin{proof}[Proof by invariant and contradiction]
 %
-\paragraph{Invariant.}
+\paragraph{Invariant.}~%
 At the start of every loop iteration, if there exists an integer
 $r$ such that $r^2=\texttt{num}$, then $r\in[\texttt{low},\,\texttt{high}]$.
 
-\paragraph{Initialization.}~
+\paragraph{Initialization.}~%
 Initially $\texttt{low}=1,\,\texttt{high}=\texttt{num}$, so the interval
 contains \emph{all} positive integers; the invariant holds vacuously.
 
-\paragraph{Maintenance.}~
+\paragraph{Maintenance.}~%
 Let $\texttt{mid}=\bigl\lfloor(\texttt{low}+\texttt{high})/2\bigr\rfloor$.
 
 \begin{enumerate}[label=\textbf{Case \arabic*:}, wide=0pt]
@@ -45,7 +47,7 @@ Let $\texttt{mid}=\bigl\lfloor(\texttt{low}+\texttt{high})/2\bigr\rfloor$.
 \end{enumerate}
 In each case the invariant is preserved.
 
-\paragraph{Termination.}
+\paragraph{Termination.}~%
 The loop stops in two possible situations:
 \begin{itemize}
   \item $\texttt{mid}^2=\texttt{num}$ --- we return \textbf{true}, and $r=\texttt{mid}$.
@@ -57,6 +59,7 @@ The loop stops in two possible situations:
 \end{proof}
 
 \end{document}
+
 
 % \documentclass{article}
 % \begin{document}
