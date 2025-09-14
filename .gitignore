@@ -28,3 +28,4 @@ TestResults.xml
 *.csv
 # *.png
 *.pdf
+.DS_Store
