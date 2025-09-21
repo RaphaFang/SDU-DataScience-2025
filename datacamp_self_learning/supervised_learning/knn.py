@@ -3,7 +3,7 @@ from sklearn.neighbors import KNeighborsClassifier
 churn_df = [[]] # 我拿不到資料
 
 y = churn_df["churn"].values
-X = churn_df[["account_length", "customer_service_calls"]].values  # ! 但是為什麼這邊都要轉 .value??
+X = churn_df[["account_length", "customer_service_calls"]].values  # ! 為什麼這邊都要轉 .value?? 因為要轉換成 NumPy arr
 	# .values → 轉成 NumPy arr
 	# Series → .values 變成 1D ndarray
 	# DataFrame → .values 變成 2D ndarray
