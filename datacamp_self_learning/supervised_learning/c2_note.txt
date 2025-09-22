@@ -1,0 +1,18 @@
+Loss function
+他是以B為帶入值，但不是說他得到B
+是為了衡量現有的model 帶入 B 後是不是得到最小的（但有可能透過不同方式判斷小）
+越小就是我們要找的。但是當然還要考慮到overfitting問題
+
+    代數 B 的函數他做了什麼運算？計算 差的平方 （真實y 減上預測y）
+    Sum of Squared Errors(SSE) 是這個的加總。Mean of Squared Errors(MSE) 這會是平均 = SSE / n
+
+overfitting如何處理？
+LinearRegression → 純 OLS
+Ridge → OLS + L2 懲罰 (係數縮小，但都存在)
+Lasso → OLS + L1 懲罰 (部分係數直接變 0，做特徵選擇)
+
+
+terminology:
+coefficient 在 linear algebra, 已知、固定的數字，不是你去學的。翻譯成 係數
+coefficient 在 ML,一開始是未知的，用訓練資料學出來。翻譯成迴歸係數
+Hyperparameter（超參數）：要你手動設定的（例如 Ridge 裡的 alpha，KNN 裡的 k）
