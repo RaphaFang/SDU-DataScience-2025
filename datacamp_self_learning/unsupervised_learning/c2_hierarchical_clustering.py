@@ -24,3 +24,19 @@ dendrogram(mergings,
     leaf_font_size=6,
 )
 plt.show()
+
+# ---------------------------------------------------------------------------
+import pandas as pd
+from scipy.cluster.hierarchy import fcluster
+
+labels = fcluster(mergings,t=6,criterion='distance')
+
+df = pd.DataFrame({'labels': labels, 'varieties': varieties})
+
+ct = pd.crosstab(df['labels'], df['varieties'])
+print(ct)
+    # varieties  Canadian wheat  Kama wheat  Rosa wheat
+    # labels                                           
+    # 1                      14           3           0
+    # 2                       0           0          14
+    # 3                       0          11           0

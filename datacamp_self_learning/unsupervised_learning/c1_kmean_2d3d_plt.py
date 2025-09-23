@@ -311,8 +311,8 @@ model.fit(points)
 
 labels = model.predict(points) # 這會都是 0 1 0 1 的list
 
-xs = points[:,0]
-ys = points[:,1]
+xs = points[:,0] # 這邊是挑選出 0 col
+ys = points[:,1] # 這邊是挑選出 1 col
 plt.scatter(xs, ys, c=labels, alpha=0.5)
 
 centroids = model.cluster_centers_
