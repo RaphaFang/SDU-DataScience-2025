@@ -1,0 +1,7 @@
+調用正則化 (regularization)，也就是處理penalty。不是 標準化 (Normalization / Standardization)
+LogisticRegression 用 C(1/a)
+Ridge/Lasso 用 alpha
+
+tol：設定在跑的參數什麼時候停下
+
+class_weight：是針對你餵進去的樣本加權，因為原先可能不一致
