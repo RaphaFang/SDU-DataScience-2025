@@ -15,7 +15,7 @@ music_df["genre"] = np.where(music_df["genre"] == "Rock", 1, 0)
 print(music_df.isna().sum().sort_values())
 print("Shape of the `music_df`: {}".format(music_df.shape))
 
-
+# ------------------------------------------------------------------------
 imputer = SimpleImputer()
 knn = KNeighborsClassifier(3)
 steps = [("imputer", imputer), 

@@ -18,7 +18,7 @@ pipeline.fit(X_train, y_train)
 print(pipeline.score(X_test, y_test))
 # 0.6193523316282489
 
-
+# ------------------------------------------------------------------------
 steps = [("scaler", StandardScaler()),
          ("logreg", LogisticRegression())]
 pipeline = Pipeline(steps)

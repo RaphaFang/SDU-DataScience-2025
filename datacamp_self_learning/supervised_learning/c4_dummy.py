@@ -1,9 +1,5 @@
-from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier 
-import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.metrics import root_mean_squared_error
-from sklearn.model_selection import train_test_split, KFold, cross_val_score
+from sklearn.model_selection import cross_val_score
 from sklearn.linear_model import Ridge
 import pandas as pd
 
@@ -11,6 +7,7 @@ music_dummies = pd.get_dummies(music_df, drop_first=True) # see the c4_note
 
 print("Shape of music_dummies: {}".format(music_dummies.shape))
 
+# ------------------------------------------------------------------------
 X = music_dummies.drop('popularity', axis=1).values # 這是調整方向的，通常是 drop row, 現在是 drop col
 y = music_dummies['popularity'].values
 
