@@ -7,19 +7,14 @@ from sklearn.model_selection import train_test_split, KFold, cross_val_score
 from sklearn.linear_model import Ridge
 import pandas as pd
 
+music_dummies = pd.get_dummies(music_df, drop_first=True) # see the c4_note 
 
-
-music_dummies = pd.get_dummies(music_df, drop_first=True)
-
-# Print the new DataFrame's shape
 print("Shape of music_dummies: {}".format(music_dummies.shape))
 
-# Create X and y
-X = music_dummies.drop('popularity', axis=1).values
+X = music_dummies.drop('popularity', axis=1).values # 這是調整方向的，通常是 drop row, 現在是 drop col
 y = music_dummies['popularity'].values
 
 ridge = Ridge(0.2)
-
 scores = cross_val_score(ridge, X, y, cv=kf, scoring="neg_mean_squared_error")
 print(scores)
 # [-68.49467657 -56.64985721 -70.89015472 -64.1558722  -80.14086371]
