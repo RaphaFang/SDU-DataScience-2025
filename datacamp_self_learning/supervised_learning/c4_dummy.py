@@ -17,7 +17,7 @@ y = music_dummies['popularity'].values
 ridge = Ridge(0.2)
 scores = cross_val_score(ridge, X, y, cv=kf, scoring="neg_mean_squared_error")
 print(scores)
-# [-68.49467657 -56.64985721 -70.89015472 -64.1558722  -80.14086371]
+# [-68.49467657 -56.64985721 -70.89015472 -64.1558722  -80.14086371] neg_mean_squared_error -> see the c4_note
 
 rmse = np.sqrt(-scores)
 print(f"Average RMSE: {np.mean(rmse)}")
