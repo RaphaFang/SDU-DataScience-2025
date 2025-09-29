@@ -1,0 +1,18 @@
+dimensionality reduction
+
+PCA
+數值型/密集矩陣
+找最大變異方向，線性降維
+圖像壓縮、資料視覺化
+
+TfidfVectorizer
+文字 → 數值
+計算詞頻+逆文檔頻率，產生稀疏矩陣
+文本分類、搜尋引擎
+
+Text → TfidfVectorizer → (TruncatedSVD  or  NMF) → 下游任務
+
+如何選擇？TruncatedSVD or NMF
+    如果你只是想要降維、壓縮特徵 → 用 TruncatedSVD（快，適合 pipeline）。
+    如果你要做主題建模，且重視語意解釋 → 用 NMF（結果直觀，例如「主題 = 犯罪 + 法律 + 法庭」）。
+    如果資料量很大（幾十萬篇文件以上） → 優先考慮 TruncatedSVD，因為 NMF 計算會變得很慢。
