@@ -44,7 +44,7 @@ BMI(120, 180)
 # ------------------------------------
 facto <- function(x){
     holder <- 1
-    while(x>0){
+    while(x>0) {
         holder <- holder*x
         x <- x-1
     }
