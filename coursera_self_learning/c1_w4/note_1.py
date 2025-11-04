@@ -97,3 +97,42 @@ def linear_activation_backward(dA, cache, activation):
         dA_prev, dW, db = linear_backward(dZ, linear_cache)
     
     return dA_prev, dW, db
+
+
+def L_model_backward(AL, Y, caches):
+    grads = {}
+    L = len(caches) # the number of layers
+    m = AL.shape[1]
+    Y = Y.reshape(AL.shape) # after this line, Y is the same shape as AL
+    
+    # Initializing the backpropagation
+    dAL = -(np.divide(Y, AL) - np.divide(1 -Y, 1 - AL))
+    
+    # Lth layer (SIGMOID -> LINEAR) gradients. Inputs: "dAL, current_cache". Outputs: "grads["dAL-1"], grads["dWL"], grads["dbL"]
+    current_cache = caches[L-1]
+    dA_prev_temp, dW_temp, db_temp = linear_activation_backward(dAL, current_cache, 'sigmoid')
+    grads["dA" + str(L-1)] = dA_prev_temp
+    grads["dW" + str(L)] = dW_temp
+    grads["db" + str(L)] = db_temp
+    
+    # Loop from l=L-2 to l=0
+    for l in reversed(range(L-1)): # lth layer: (RELU -> LINEAR) gradients.
+        current_cache = caches[l]
+        dA_prev_temp, dW_temp, db_temp = linear_activation_backward(grads["dA" + str(l + 1)],current_cache,'relu')
+        grads["dA" + str(l)] = dA_prev_temp
+        grads["dW" + str(l + 1)] = dW_temp
+        grads["db" + str(l + 1)] = db_temp
+
+    return grads
+    # 還是原先概念，A 相關的這參數，會是其他參數 -1。只是這邊不知道為什麼要寫這樣，兩個區塊一個 +1 一個 -1
+
+
+def update_parameters(params, grads, learning_rate):
+    parameters = copy.deepcopy(params)
+    L = len(parameters) // 2 # number of layers in the neural network
+
+    for l in range(L):
+        parameters["W" + str(l+1)] = parameters["W" + str(l+1)]- learning_rate * grads['dW' + str(l+1)]
+        parameters["b" + str(l+1)] = parameters["b" + str(l+1)] -learning_rate * grads['db' + str(l+1)]
+
+    return parameters
