@@ -8,6 +8,6 @@ def lcm(a, b):
     return (l)
 
 def package(a, b):
-    print(f"the gcd: {gcd(a, b)}, the lcm: {lcm(a, b)}, the a*b {a*b}")
+    print(f"the gcd: {gcd(a, b)}, the lcm: {lcm(a, b)}, the a*b: {a*b}")
 
-package(18, 24)
+package(15, 50)
