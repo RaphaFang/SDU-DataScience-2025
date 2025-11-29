@@ -1,110 +1,127 @@
 import numpy as np
 
-def compute_cost_with_regularization(A3, Y, parameters, lambd):
+def update_parameters_with_gd(parameters, grads, learning_rate):
 
-    m = Y.shape[1]
-    W1 = parameters["W1"]
-    W2 = parameters["W2"]
-    W3 = parameters["W3"]
-    
-    cross_entropy_cost = compute_cost(A3, Y) # This gives you the cross-entropy part of the cost
-    
-    L2_regularization_cost = (lambd / (2*m)) * (np.sum(np.square(W1)) + np.sum(np.square(W2)) + np.sum(np.square(W3)))
+    L = len(parameters) // 2
 
-    cost = cross_entropy_cost + L2_regularization_cost
-    
-    return cost
+    for l in range(1, L + 1):
+        parameters["W" + str(l)] = parameters["W" + str(l)] - learning_rate * grads['dW' + str(l)]
+        parameters["b" + str(l)] = parameters["b" + str(l)] - learning_rate * grads['db' + str(l)]
+    return parameters
 
+# ----------------------------------------------------------------------------------------------------------------------------------
+def random_mini_batches(X, Y, mini_batch_size = 64, seed = 0):
+    np.random.seed(seed)            # To make your "random" minibatches the same as ours
+    m = X.shape[1]                  # number of training examples
+    mini_batches = []
+        
+    # Step 1: Shuffle (X, Y)
+    permutation = list(np.random.permutation(m))
+    shuffled_X = X[:, permutation]
+    shuffled_Y = Y[:, permutation].reshape((1, m))
+    
+    inc = mini_batch_size
 
-def backward_propagation_with_regularization(X, Y, cache, lambd):
-    m = X.shape[1]
-    (Z1, A1, W1, b1, Z2, A2, W2, b2, Z3, A3, W3, b3) = cache
-    
-    dZ3 = A3 - Y
-    dW3 = 1./m * np.dot(dZ3, A2.T) + ((lambd/m)*W3)  # this is the part that works: ((lambd/m)*W3)
-    db3 = 1. / m * np.sum(dZ3, axis=1, keepdims=True)
-    
-    dA2 = np.dot(W3.T, dZ3)
-    dZ2 = np.multiply(dA2, np.int64(A2 > 0))
-    dW2 = 1./m * np.dot(dZ2, A1.T) + ((lambd/m)*W2)
-    db2 = 1. / m * np.sum(dZ2, axis=1, keepdims=True)
-    
-    dA1 = np.dot(W2.T, dZ2)
-    dZ1 = np.multiply(dA1, np.int64(A1 > 0))
-    dW1 = 1./m * np.dot(dZ1, X.T) + ((lambd/m)*W1)
-    db1 = 1. / m * np.sum(dZ1, axis=1, keepdims=True)
-    
-    gradients = {"dZ3": dZ3, "dW3": dW3, "db3": db3,"dA2": dA2,
-                 "dZ2": dZ2, "dW2": dW2, "db2": db2, "dA1": dA1, 
-                 "dZ1": dZ1, "dW1": dW1, "db1": db1}
-    
-    return gradients
+    # Step 2 - Partition (shuffled_X, shuffled_Y).
+    # Cases with a complete mini batch size only i.e each of 64 examples.
+    for k in range(0, num_complete_minibatches):
+        # (approx. 2 lines)
+        mini_batch_X = shuffled_X[:, k*mini_batch_size : (k+1)*mini_batch_size]
+        mini_batch_Y = shuffled_Y[:, k*mini_batch_size : (k+1)*mini_batch_size]
 
-# --------------------------------------------------------------------------------------------------------------------------------------------
-def forward_propagation_with_dropout(X, parameters, keep_prob = 0.5):
+        mini_batch = (mini_batch_X, mini_batch_Y)
+        mini_batches.append(mini_batch)
     
-    np.random.seed(1)
-    
-    W1 = parameters["W1"]
-    b1 = parameters["b1"]
-    W2 = parameters["W2"]
-    b2 = parameters["b2"]
-    W3 = parameters["W3"]
-    b3 = parameters["b3"]
-    
-    # LINEAR -> RELU -> LINEAR -> RELU -> LINEAR -> SIGMOID
-    Z1 = np.dot(W1, X) + b1
-    A1 = relu(Z1)
-    D1 = np.random.rand(A1.shape[0], A1.shape[1])  # Step 1: initialize matrix D1 = np.random.rand(..., ...)
-    D1 = (D1 < keep_prob).astype(int)              # Step 2: convert entries of D1 to 0 or 1 (using keep_prob as the threshold)
-    A1 = A1 * D1                                   # Step 3: shut down some neurons of A1
-    A1 = A1 / keep_prob                            # Step 4: scale the value of neurons that haven't been shut down
+    # For handling the end case (last mini-batch < mini_batch_size i.e less than 64)
+    num_complete_minibatches = math.floor(m / mini_batch_size) # number of mini batches of size mini_batch_size in your partitionning
+    if m % mini_batch_size != 0:
+        #(approx. 2 lines)
+        mini_batch_X = shuffled_X[:, num_complete_minibatches*mini_batch_size :]
+        mini_batch_Y = shuffled_Y[:, num_complete_minibatches*mini_batch_size :]
 
-    Z2 = np.dot(W2, A1) + b2
-    A2 = relu(Z2)
-    D2 = np.random.rand(A2.shape[0], A2.shape[1])  # Step 1: initialize matrix D2 = np.random.rand(..., ...)
-    D2 = (D2 < keep_prob).astype(int)              # Step 2: convert entries of D2 to 0 or 1 (using keep_prob as the threshold)
-    A2 = A2 * D2                                   # Step 3: shut down some neurons of A2
-    A2 = A2 / keep_prob                            # Step 4: scale the value of neurons that haven't been shut down
+        mini_batch = (mini_batch_X, mini_batch_Y)
+        mini_batches.append(mini_batch)
+    
+    return mini_batches
 
-    Z3 = np.dot(W3, A2) + b3
-    A3 = sigmoid(Z3)
-    
-    cache = (Z1, D1, A1, W1, b1, Z2, D2, A2, W2, b2, Z3, A3, W3, b3)
-    
-    return A3, cache
+# ----------------------------------------------------------------------------------------------------------------------------------
+def initialize_velocity(parameters):
 
-def backward_propagation_with_dropout(X, Y, cache, keep_prob):
-    m = X.shape[1]
-    (Z1, D1, A1, W1, b1, Z2, D2, A2, W2, b2, Z3, A3, W3, b3) = cache
+    L = len(parameters) // 2 # number of layers in the neural networks
+    v = {}
     
-    dZ3 = A3 - Y
-    dW3 = 1./m * np.dot(dZ3, A2.T)
-    db3 = 1./m * np.sum(dZ3, axis=1, keepdims=True)
-    dA2 = np.dot(W3.T, dZ3)
-    dA2 = dA2 * D2                # Step 1: Apply mask D2 to shut down the same neurons as during the forward propagation
-    dA2 = dA2/ keep_prob          # Step 2: Scale the value of neurons that haven't been shut down
+    for l in range(1, L + 1):
+        v["dW" + str(l)] = np.zeros(parameters["W" + str(l)].shape)
+        v["db" + str(l)] = np.zeros(parameters["b" + str(l)].shape)
+        
+    return v
 
-    dZ2 = np.multiply(dA2, np.int64(A2 > 0))
-    dW2 = 1./m * np.dot(dZ2, A1.T)
-    db2 = 1./m * np.sum(dZ2, axis=1, keepdims=True)
+def update_parameters_with_momentum(parameters, grads, v, beta, learning_rate):
+    L = len(parameters) // 2 # number of layers in the neural networks
     
-    dA1 = np.dot(W2.T, dZ2)
-    dA1 = dA1 * D1                # Step 1: Apply mask D1 to shut down the same neurons as during the forward propagation
-    dA1 = dA1 / keep_prob         # Step 2: Scale the value of neurons that haven't been shut down
-
-    dZ1 = np.multiply(dA1, np.int64(A1 > 0))
-    dW1 = 1./m * np.dot(dZ1, X.T)
-    db1 = 1./m * np.sum(dZ1, axis=1, keepdims=True)
-    
-    gradients = {"dZ3": dZ3, "dW3": dW3, "db3": db3,"dA2": dA2,
-                 "dZ2": dZ2, "dW2": dW2, "db2": db2, "dA1": dA1, 
-                 "dZ1": dZ1, "dW1": dW1, "db1": db1}
-    
-    return gradients
+    for l in range(1, L + 1):
+        # compute velocities
+        v["dW" + str(l)] = beta*v["dW" + str(l)] + (1-beta)*grads["dW" + str(l)]
+        v["db" + str(l)] = beta*v["db" + str(l)] + (1-beta)*grads["db" + str(l)]
+        # update parameters
+        parameters["W" + str(l)] -= learning_rate*v["dW" + str(l)]
+        parameters["b" + str(l)] -= learning_rate*v["db" + str(l)]
+        
+    return parameters, v
 
 
-# model	                                train accuracy	        test accuracy
-# 3-layer NN without regularization	    95%	                    91.5%
-# 3-layer NN with L2-regularization	    94%	                    93%
-# 3-layer NN with dropout	            93%	                    95%
+# ----------------------------------------------------------------------------------------------------------------------------------
+def initialize_adam(parameters) :
+    L = len(parameters) // 2 # number of layers in the neural networks
+    v = {}
+    s = {}
+    
+    for l in range(1, L + 1):
+        v["dW" + str(l)] = np.zeros(parameters["W" + str(l)].shape)
+        v["db" + str(l)] = np.zeros(parameters["b" + str(l)].shape)
+        s["dW" + str(l)] = np.zeros(parameters["W" + str(l)].shape)
+        s["db" + str(l)] = np.zeros(parameters["b" + str(l)].shape)
+    
+    return v, s
+
+def update_parameters_with_adam(parameters, grads, v, s, t, learning_rate = 0.01,
+                                beta1 = 0.9, beta2 = 0.999,  epsilon = 1e-8):
+    L = len(parameters) // 2                 # number of layers in the neural networks
+    v_corrected = {}                         # Initializing first moment estimate, python dictionary
+    s_corrected = {}                         # Initializing second moment estimate, python dictionary
+    
+    for l in range(1, L + 1):
+        # Moving average of the gradients. Inputs: "v, grads, beta1". Output: "v".
+        v["dW" + str(l)] = beta1*v["dW" + str(l)] + (1 - beta1)*grads["dW" + str(l)]
+        v["db" + str(l)] = beta1*v["db" + str(l)] + (1 - beta1)*grads["db" + str(l)]
+
+        # Compute bias-corrected first moment estimate. Inputs: "v, beta1, t". Output: "v_corrected".
+        v_corrected["dW" + str(l)] = v["dW" + str(l)] / (1-(beta1**t))
+        v_corrected["db" + str(l)] = v["db" + str(l)] / (1-(beta1**t))
+
+        # Moving average of the squared gradients. Inputs: "s, grads, beta2". Output: "s".
+        s["dW" + str(l)] = beta2 * s["dW" + str(l)] + (1 - beta2) * (grads["dW" + str(l)]**2)
+        s["db" + str(l)] = beta2 * s["db" + str(l)] + (1 - beta2) * (grads["db" + str(l)]**2)
+
+        # Compute bias-corrected second raw moment estimate. Inputs: "s, beta2, t". Output: "s_corrected".
+        s_corrected["dW" + str(l)] = s["dW" + str(l)] / (1-(beta2**t))
+        s_corrected["db" + str(l)] = s["db" + str(l)] / (1-(beta2**t))
+
+        # Update parameters. Inputs: "parameters, learning_rate, v_corrected, s_corrected, epsilon". Output: "parameters".
+        parameters["W" + str(l)] -= learning_rate * (v_corrected["dW" + str(l)] / (np.sqrt(s_corrected["dW" + str(l)]) + epsilon))
+        parameters["b" + str(l)] -= learning_rate * (v_corrected["db" + str(l)] / (np.sqrt(s_corrected["db" + str(l)]) + epsilon))
+
+
+    return parameters, v, s, v_corrected, s_corrected
+
+# ----------------------------------------------------------------------------------------------------------------------------------
+def update_lr(learning_rate0, epoch_num, decay_rate):
+    learning_rate = (1 / (1 + decay_rate*epoch_num))*learning_rate0
+
+    return learning_rate
+
+def schedule_lr_decay(learning_rate0, epoch_num, decay_rate, time_interval=1000):
+
+    learning_rate = (1 / (1 + decay_rate * (epoch_num // time_interval))) * learning_rate0
+    
+    return learning_rate
