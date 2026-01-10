@@ -29,3 +29,6 @@ TestResults.xml
 # *.png
 *.pdf
 .DS_Store
+
+
+*.h5
